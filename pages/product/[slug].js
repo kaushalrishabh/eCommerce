@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { client, urlFor } from '../../lib/client';
 import { AiOutlinePlus, AiOutlineMinus, AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
 import { Product } from '../../components';
 
+import { useStateContext } from '../../context/StateContext';
+
 const ProductDetails = ({ product, products }) => {
 
     const { image, name, details, price } = product;
+    const [index, setIndex] = useState(0);
+    const { decQty, incQty, qty } = useStateContext();
 
     return (
         <div>
@@ -14,18 +18,21 @@ const ProductDetails = ({ product, products }) => {
                 <div>
                     <div className="image-container">
                         <img
-                            src={urlFor(image && image[0])}
+                            src={urlFor(image && image[index])}
+                            className="product-detail-image"
                         />
                     </div>
-                    {/* <div className="small-images-container">
-                        {image.map((item, i) => (
-                            <img src={urlFor(item)}
-                                className=""
-                                onMouseEnter=""
-                            />
-                        ))}
+                    <div className="small-images-container">
+                        {
+                            image.map((item, i) => (
+                                <img src={urlFor(item)}
+                                    className={i === index ? 'small-image selected-image'
+                                        : 'small-image'}
+                                    onMouseEnter={() => setIndex(i)}
+                                />
+                            ))}
 
-                    </div> */}
+                    </div>
                 </div>
                 <div className="product-detail-desc">
                     <h1> {name} </h1>
@@ -75,7 +82,7 @@ const ProductDetails = ({ product, products }) => {
                     <div className="maylike-products-container">
                         {
                             products.map((item) => <Product
-                                key={item.id}
+                                key={item._id}
                                 product={item} />)
                         }
                     </div>
