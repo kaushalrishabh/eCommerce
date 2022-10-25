@@ -2,6 +2,8 @@ import React from 'react'
 import { client, urlFor } from '../../lib/client';
 import { AiOutlinePlus, AiOutlineMinus, AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
+import { Product } from '../../components';
+
 const ProductDetails = ({ product, products }) => {
 
     const { image, name, details, price } = product;
@@ -66,6 +68,19 @@ const ProductDetails = ({ product, products }) => {
                     </div>
                 </div>
             </div>
+
+            <div className="maylike-products-wrapper">
+                <h2> You may also like </h2>
+                <div className="marquee">
+                    <div className="maylike-products-container">
+                        {
+                            products.map((item) => <Product
+                                key={item.id}
+                                product={item} />)
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
@@ -77,11 +92,13 @@ export const getStaticPaths = async () => {
         }
     }`
     const products = await client.fetch(query);
-    const paths = products.map((product) => ({
-        params: {
-            slug: product.slug.current
+    const paths = products.map((product) => (
+        {
+            params: {
+                slug: product.slug.current
+            }
         }
-    }));
+    ));
 
     return {
         paths,
